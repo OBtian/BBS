@@ -1,0 +1,47 @@
+{% extends 'backend.html' %}
+
+{% block active %}
+              <li role="presentation" id="art"><a href="#articles" aria-controls="home" role="tab" data-toggle="tab">文章管理</a></li>
+              <li role="presentation" id="cla"><a href="#classify" aria-controls="home" role="tab" data-toggle="tab">分类管理</a></li>
+              <li role="presentation" id="com"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab">回复管理</a></li>
+              <li role="presentation" id="add_art"><a href="#add_article" aria-controls="home" role="tab" data-toggle="tab">添加文章</a></li>
+              <li role="presentation" id="add_cla"><a href="#add_classify" aria-controls="home" role="tab" data-toggle="tab">添加分类</a></li>
+              <li role="presentation" id="my_com" class="active"><a href="#my_comments" aria-controls="home" role="tab" data-toggle="tab">我的评论</a></li>
+              <li role="presentation" id="set"><a href="#settings" aria-controls="home" role="tab" data-toggle="tab">设置</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9 pull-right" role="navigation">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="articles">
+{% endblock %}
+
+{% block my_comments %}
+    <div role="tabpanel" class="tab-pane active" id="classify">
+        <h2>修改评论</h2>
+        <br>
+        <label for="password">评论内容</label>
+        <input type="text" name="com_content" id="com_content" class="form-control" value="{{ comment_obj.content }}">
+        <br>
+        <input class="btn btn-primary pull-right" id="submit_edi_com" type="button" value="提交">
+        <span style="color: darkred" id="error"></span>
+    </div>
+
+{% endblock %}
+{% block js_add %}
+    $("#submit_edi_com").click(function(){
+        $.ajax({
+            url:window.location.href,
+            type:'post',
+            data: {
+                'com_content': $("#com_content").val(),
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function (args){
+                if(args.code==1000){
+                    //弹出模态框
+                    window.location.href = args.url
+                }
+            }
+        })
+    })
+{% endblock %}

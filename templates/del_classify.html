@@ -1,0 +1,48 @@
+{% extends 'backend.html' %}
+
+{% block active %}
+              <li role="presentation" id="art"><a href="#articles" aria-controls="home" role="tab" data-toggle="tab">文章管理</a></li>
+              <li role="presentation" id="cla" class="active"><a href="#classify" aria-controls="home" role="tab" data-toggle="tab">分类管理</a></li>
+              <li role="presentation" id="com"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab">回复管理</a></li>
+              <li role="presentation" id="add_art"><a href="#add_article" aria-controls="home" role="tab" data-toggle="tab">添加文章</a></li>
+              <li role="presentation" id="add_cla"><a href="#add_classify" aria-controls="home" role="tab" data-toggle="tab">添加分类</a></li>
+              <li role="presentation" id="my_com"><a href="#my_comments" aria-controls="home" role="tab" data-toggle="tab">我的评论</a></li>
+              <li role="presentation" id="set"><a href="#settings" aria-controls="home" role="tab" data-toggle="tab">设置</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9 pull-right" role="navigation">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="articles">
+{% endblock %}
+
+{% block classify %}
+    <div role="tabpanel" class="tab-pane active" id="classify">
+
+<table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>标签名</th>
+                    <th>操作</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+            {% if classify_list %}
+                {% for classify in classify_list %}
+                    <tr>
+                        <th>{{ forloop.counter }}</th>
+                        <th>{{ classify.name }}</th>
+                        <th><a href="/backend/?method=edit_cla&pk={{ classify.pk }}">编辑</a></th>
+                        <th><a href="/backend/?method=del_cla&pk={{ classify.pk }}">删除</a></th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+                    </table>
+            {% else %}
+                </tbody>
+            </table>
+                <div style="text-align: center;color: rgba(0,0,0,0.4);font-size: 16px;line-height: 100px">暂无更多内容</div>
+            {% endif %}
+    </div>
+{% endblock %}

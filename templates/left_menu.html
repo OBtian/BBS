@@ -1,0 +1,43 @@
+<div class="list-group">
+  <p class="list-group-item active">
+    文章标签
+  </p>
+{% if tags_count %}
+    {% for t in tags_count.values %}
+            <a href="/{{ usersite.site_name }}/tag/{{ t.2 }}" class="list-group-item">{{ t.0 }}({{ t.1 }})</a>
+        {% endfor %}
+{#    {% if tag %}#}
+{#        {% for c in tag %}#}
+{#            <a href="/{{ usersite.site_name }}/classify/{{ c.2 }}" class="list-group-item">{{ c.0 }}({{ c.1 }})</a>#}
+{#    {% endfor %}#}
+{% else %}
+    <div style="line-height: 80px;color: rgba(0,0,0,0.4);text-align: center">暂时没有更多内容</div>
+{% endif %}
+</div>
+<br>
+<div class="list-group">
+  <p class="list-group-item active">
+    文章分类
+  </p>
+{% if classify %}
+    {% for c in classify %}
+            <a href="/{{ usersite.site_name }}/tag/{{ c.2 }}" class="list-group-item">{{ c.0 }}({{ c.1 }})</a>
+    {% endfor %}
+{% else %}
+    <div style="line-height: 80px;color: rgba(0,0,0,0.4);text-align: center">暂时没有更多内容</div>
+{% endif %}
+
+</div>
+<br>
+<div class="list-group">
+  <p class="list-group-item active">
+    日期分类
+  </p>
+{% if classify %}
+    {% for d in date_list %}
+        <a href="/{{ usersite.site_name }}/date/{{ d.0 | date:'Y-m' }}" class="list-group-item">{{ d.0 | date:'Y-m'}}({{ d.1 }})</a>
+    {% endfor %}
+{% else %}
+    <div style="line-height: 80px;color: rgba(0,0,0,0.4);text-align: center">暂时没有更多内容</div>
+{% endif %}
+</div>

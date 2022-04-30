@@ -1,0 +1,35 @@
+{% extends 'backend.html' %}
+
+{% block add_classify %}
+    <div role="tabpanel" class="tab-pane active" id="classify">
+        <h2>添加分类</h2>
+        <br>
+        <label for="password">分类内容</label>
+        <input type="text" name="name" id="name" class="form-control">
+        <br>
+        <input class="btn btn-primary pull-right" id="submit_add_cla" type="button" value="提交">
+        <span style="color: darkred" id="cla_error"></span>
+    </div>
+
+{% endblock %}
+
+{% block js_add %}
+        $("#submit_add_cla").click(function(){
+            $.ajax({
+                url:'/add_classify/',
+                type:'post',
+                data: {
+                    'name': $("#name").val(),
+                    'csrfmiddlewaretoken':'{{ csrf_token }}'
+                },
+                success:function (args){
+                    if(args.code==1000){
+                        //弹出模态框
+                        window.location.href = args.url
+                    }else{
+                        $("#cla_error").text(args.msg)
+                    }
+                }
+            })
+        })
+{% endblock %}

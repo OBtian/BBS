@@ -1,0 +1,72 @@
+{% extends 'navigation_bar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-3 list-group" role="navigation">
+            <ul class="nav nav-pills nav-stacked">
+                {% block active %}
+              <li role="presentation" id="art" class="active"><a href="#articles" aria-controls="home" role="tab" data-toggle="tab">文章管理</a></li>
+              <li role="presentation" id="cla"><a href="#classify" aria-controls="home" role="tab" data-toggle="tab">分类管理</a></li>
+              <li role="presentation" id="com"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab">回复管理</a></li>
+              <li role="presentation" id="add_art"><a href="#add_article" aria-controls="home" role="tab" data-toggle="tab">添加文章</a></li>
+              <li role="presentation" id="add_cla"><a href="#add_classify" aria-controls="home" role="tab" data-toggle="tab">添加分类</a></li>
+              <li role="presentation" id="my_com"><a href="#my_comments" aria-controls="home" role="tab" data-toggle="tab">我的评论</a></li>
+              <li role="presentation" id="set"><a href="#settings" aria-controls="home" role="tab" data-toggle="tab">设置</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9 pull-right" role="navigation">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="articles">
+                {% endblock %}
+                {% block articles %}
+
+                {% endblock %}
+                </div>
+
+                {% block classify %}
+                <div role="tabpanel" class="tab-pane" id="classify">
+
+                </div>
+                {% endblock %}
+                {% block comments %}
+                <div role="tabpanel" class="tab-pane" id="comments">
+
+                </div>
+                {% endblock %}
+                <div role="tabpanel" class="tab-pane" id="add_article">
+                    {% block add_article %}
+
+                    {% endblock %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="add_classify">
+                    {% block add_classify %}
+
+                    {% endblock %}
+                </div>
+                {% block my_comments %}
+                <div role="tabpanel" class="tab-pane" id="my_comments">
+
+
+
+                </div>
+                {% endblock %}
+                {% block settings %}
+                <div role="tabpanel" class="tab-pane" id="settings">
+
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_nav %}
+    $("#set").click(function (){
+        window.location.href = '/set_info/'
+    })
+    {% block js %}
+
+    {% endblock %}
+{% endblock %}

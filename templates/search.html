@@ -1,0 +1,235 @@
+{% extends 'navigation_bar.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-12 list-group" role="navigation">
+                <ul class="nav nav-tabs">
+                    {% block active %}
+
+
+                    <li role="presentation" id="mul" class="active"><a href="#multiple" aria-controls="home" role="tab"
+                                                                       data-toggle="tab">综合</a></li>
+                    <li role="presentation" id="art"><a href="#article" aria-controls="home" role="tab"
+                                                        data-toggle="tab">文章</a></li>
+                    <li role="presentation" id="user"><a href="#users" aria-controls="home" role="tab"
+                                                         data-toggle="tab">用户</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10 col-md-offset-1" role="navigation">
+        <div class="tab-content" style="padding-left: 15px">
+            <div role="tabpanel" class="tab-pane active" id="multiple">
+            {% endblock %}
+                {% if user_obj %}
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <a href="/{{ user_obj.usersite.site_name }}/">
+                                <img class="media-object img-circle" src="/media/{{ user_obj.avatar }}" alt="..."
+                                     width="80px">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading" style="margin: 30px;"><a
+                                    href="/{{ user_obj.usersite.site_name }}">{{ user_obj.username }}</a></h3>
+                        </div>
+                    </div>
+                    <br>
+                    <hr>
+                {% endif %}
+                {% if page_queryset_article %}
+                    {% for article in page_queryset_article %}
+                        <div class="media">
+                            <h4 class="media-heading"><a
+                                    href="/{{ article.usersite.site_name }}/article/{{ article.pk }}">{{ article.title }}</a>
+                            </h4>
+                            <div class="media-left">
+                                <a href="/{{ article.usersite }}/">
+                                    <img class="media-object" src="/media/{{ article.usersite.userinfo.avatar }}"
+                                         alt="..." width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                {{ article.desc }}
+                            </div>
+                            <br>
+                            <div>
+                                <span><a href="/{{ article.usersite }}/">{{ article.usersite.userinfo.username }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></span>
+                                <span>{{ article.create_time|date:'Y-m-d h:i' }}&nbsp;&nbsp;&nbsp;</span>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+                    <div class="col-md-8 col-md-offset-2">
+                        {{ page_obj.page_html|safe }}
+                    </div>
+                {% else %}
+                    <p>再怎么找也没有啦~先看看下面的吧</p>
+                    <hr>
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <a href="/{{ users_obj.usersite.site_name }}/">
+                                <img class="media-object img-circle" src="/media/{{ users_obj.avatar }}" alt="..."
+                                     width="80px">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading" style="margin: 30px;"><a
+                                    href="/{{ users_obj.usersite.site_name }}">{{ users_obj.username }}</a></h3>
+                        </div>
+                    </div>
+                    <br>
+                    <hr>
+                    {% for article in page_queryset_articles %}
+                        <div class="media">
+                            <h4 class="media-heading"><a
+                                    href="/{{ article.usersite.site_name }}/article/{{ article.pk }}">{{ article.title }}</a>
+                            </h4>
+                            <div class="media-left">
+                                <a href="/{{ article.usersite }}/">
+                                    <img class="media-object" src="/media/{{ article.usersite.userinfo.avatar }}"
+                                         alt="..." width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                {{ article.desc }}
+                            </div>
+                            <br>
+                            <div>
+                                <span><a href="/{{ article.usersite }}/">{{ article.usersite.userinfo.username }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></span>
+                                <span>{{ article.create_time|date:'Y-m-d h:i' }}&nbsp;&nbsp;&nbsp;</span>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+                    <div class="col-md-8 col-md-offset-2">
+                        {{ page_obj.page_html|safe }}
+                    </div>
+                {% endif %}
+            </div>
+                {% block article %}
+
+
+            <div role="tabpanel" class="tab-pane" id="article">
+                {% if page_queryset_article %}
+                    {% for article in page_queryset_article %}
+                        <div class="media">
+                            <h4 class="media-heading"><a
+                                    href="/{{ article.usersite.site_name }}/article/{{ article.pk }}">{{ article.title }}</a>
+                            </h4>
+                            <div class="media-left">
+                                <a href="/{{ article.usersite }}/">
+                                    <img class="media-object" src="/media/{{ article.usersite.userinfo.avatar }}"
+                                         alt="..." width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                {{ article.desc }}
+                            </div>
+                            <br>
+                            <div>
+                                <span><a href="/{{ article.usersite }}/">{{ article.usersite.userinfo.username }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></span>
+                                <span>{{ article.create_time|date:'Y-m-d h:i' }}&nbsp;&nbsp;&nbsp;</span>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+                    <div class="col-md-8 col-md-offset-2">
+                        {{ page_obj.page_html|safe }}
+                    </div>
+                {% else %}
+                    <p>再怎么找也没有啦~先看看下面的吧</p>
+                    <hr>
+                    {% for article in page_queryset_articles %}
+                        <div class="media">
+                            <h4 class="media-heading"><a
+                                    href="/{{ article.usersite.site_name }}/article/{{ article.pk }}">{{ article.title }}</a>
+                            </h4>
+                            <div class="media-left">
+                                <a href="/{{ article.usersite }}/">
+                                    <img class="media-object" src="/media/{{ article.usersite.userinfo.avatar }}"
+                                         alt="..." width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                {{ article.desc }}
+                            </div>
+                            <br>
+                            <div>
+                                <span><a href="/{{ article.usersite }}/">{{ article.usersite.userinfo.username }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></span>
+                                <span>{{ article.create_time|date:'Y-m-d h:i' }}&nbsp;&nbsp;&nbsp;</span>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+                    <div class="col-md-8 col-md-offset-2">
+                        {{ page_obj.page_html|safe }}
+                    </div>
+                {% endif %}
+            </div>
+                {% endblock %}
+                {% block user %}
+                <div role="tabpanel" class="tab-pane" id="users">
+                <div class="media">
+                    {% if page_queryset_user %}
+                        {% for user in page_queryset_user %}
+                            <div class="media-left media-middle">
+                                <a href="/{{ user.usersite.site_name }}/">
+                                    <img class="media-object img-circle" src="/media/{{ user.avatar }}" alt="..."
+                                         width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading" style="margin: 30px;"><a
+                                        href="/{{ user.usersite.site_name }}">{{ user.username }}</a></h3>
+                            </div>
+                            <br>
+                            <hr>
+                        {% endfor %}
+                        <div class="col-md-8 col-md-offset-2">
+                            {{ page_obj.page_html|safe }}
+                        </div>
+                    {% else %}
+                        <p>再怎么找也没有啦~先看看下面的吧</p>
+                        <hr>
+                        <br>
+                        {% for user in page_queryset_users %}
+                            <div class="media-left media-middle">
+                                <a href="/{{ user.usersite.site_name }}/">
+                                    <img class="media-object img-circle" src="/media/{{ user.avatar }}" alt="..."
+                                         width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading" style="margin: 30px;"><a
+                                        href="/{{ user.usersite.site_name }}">{{ user.username }}</a></h3>
+                            </div>
+                            <br>
+                            <hr>
+                        {% endfor %}
+                        <div class="col-md-8 col-md-offset-2">
+                            {{ page_obj.page_html|safe }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+                {% endblock %}
+
+        </div>
+    </div>
+{% endblock %}
+{% block js_nav %}
+    if('{{ keyword }}' != 'inputnull'){
+    $("#keyword").val('{{ keyword }}')
+    }
+    $("#art").click(function(){
+     window.location.href = '/search/article/{{ keyword }}'
+    })
+    $("#user").click(function(){
+     window.location.href = '/search/user/{{ keyword }}'
+    })
+    $("#mul").click(function(){
+     window.location.href = '/search/multiple/{{ keyword }}'
+    })
+{% endblock %}

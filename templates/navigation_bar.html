@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+    <meta name="viewport" content="wdith=device-wdith,initial-scale=1">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+</head>
+{% block css %}
+
+{% endblock %}
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+      <div class="col-md-10 col-md-offset-1">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Easy BLOG</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+             <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分类 <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+              {% for tag in tag_list %}
+                <li><a href="/tag/{{ tag.pk }}/">{{ tag.name }}</a></li>
+              {% endfor %}
+          </ul>
+        </li>
+      </ul>
+          <form class="navbar-form navbar-left">
+              {% csrf_token %}
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search" id="keyword">
+            </div>
+            <a type="button" class="btn btn-default" id="search">搜索</a>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+              {% if request.user.is_authenticated %}
+                <li><a href="/{{ request.user.usersite }}/">{{ request.user.username }}</a></li>
+                  <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人中心<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="" data-toggle="modal" data-target="#model1">修改密码</a></li>
+                      <li><a href="" data-toggle="modal" data-target="#model2">修改头像</a></li>
+                      <li><a href="/backend/">后台管理</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="/?method=logout">退出登录</a></li>
+                    </ul>
+                  </li>
+                  <!-- Large modal -->
+                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="model1">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <h1 class="text-center">修改密码</h1>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="form-group">
+                                        <label for="">原密码</label>
+                                        <input type="password" id="id_old_password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">新密码</label>
+                                        <input type="password" id="id_new_password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">确认密码</label>
+                                        <input type="password" id="id_confirm_password" class="form-control">
+                                        <span style="color: darkred" id="psw_error"></span>
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn btn-primary btn-md pull-right" style="margin: 10px" id="id_set">确认</button>
+                                        <button class="btn btn-default btn-md pull-right" style="margin: 10px" data-dismiss="modal">取消</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                   <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="model2">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <h1 class="text-center">修改头像</h1>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="form-group">
+                                        {# 头像裁剪 #}
+                                        <label for="myfile">头像
+                                            <img src="/media/{{ request.user.avatar }}" alt="" height="80px" style="overflow:hidden;margin-left: 10px;" id="myimg" class="img-circle" >
+                                        </label>
+                                        <input type="file" id="myfile" name="avatar" style="display: none">
+
+                                    </div>
+                                    <span style="color: darkred" id="avt_error"></span>
+                                    <div class="row">
+                                        <button class="btn btn-primary btn-md pull-right" style="margin: 10px" id="id_set1">确认</button>
+                                        <button class="btn btn-default btn-md pull-right" style="margin: 10px" data-dismiss="modal">取消</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+              {% else %}
+                  <li><a href="{% url 'reg' %}">注册</a></li>
+                  <li><a href="{% url 'log' %}">登录</a></li>
+              {% endif %}
+          </ul>
+        </div>
+   </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+  {% block content %}
+  
+  {% endblock %}
+</body>
+<script>
+    $("#id_set").click(function (){
+        $.ajax({
+            url:'/set_password/',
+            type:'post',
+            data:{
+                'old_password':$("#id_old_password").val(),
+                'new_password':$("#id_new_password").val(),
+                'confirm_password':$("#id_confirm_password").val(),
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function (args){
+                if(args.code == 1000){
+                    window.location.reload()
+                }else{
+                    $("#psw_error").text(args.msg)
+                }
+            }
+        })
+    })
+    $("#myfile").change(function (){
+        // 生成文件阅读器对象
+        let myFileReaderObj = new FileReader();
+        //获取上传文件
+        let fileobj = $(this)[0].files[0];
+        //将文件交给阅读器阅读
+        myFileReaderObj.readAsDataURL(fileobj) //异步IO操作
+        myFileReaderObj.onload = function (){
+            $("#myimg").attr('src',myFileReaderObj.result);
+        }
+    });
+    $("#id_set1").click(function (){
+        let formDataObj = new FormData();
+        formDataObj.append('csrfmiddlewaretoken','{{ csrf_token }}');
+        formDataObj.append('avatar',$('#myfile')[0].files[0]);
+        $.ajax({
+            url:'/set_avatar/',
+            type:'post',
+            data:formDataObj,
+            contentType:false,
+            processData:false,
+            success:function (args){
+                if(args.code == 1000){
+                    window.location.reload()
+                }else{
+                    $("#avt_error").text(args.msg)
+                }
+            }
+        })
+    })
+    $("#search").click(function (){
+        var keyword = $("#keyword").val();
+        if(keyword == ''){
+            keyword = 'inputnull'
+        }
+        window.location.href = '/search/multiple/' + keyword
+
+    })
+    {% block js_nav %}
+
+    {% endblock %}
+</script>
+</html>

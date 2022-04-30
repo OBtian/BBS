@@ -1,0 +1,72 @@
+{% extends 'backend.html' %}
+
+{% block articles %}
+    <h2>添加文章</h2>
+    <br>
+    <form id="myform">
+        {% csrf_token %}
+    <div class="form-group">
+        <label for="password">标题</label>
+        <input type="text" name="title" id="title" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="password">简介</label>
+        <br>
+        <textarea name="desc" id="desc" cols="110" rows="5"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="password">内容</label>
+        <br>
+        <textarea name="content" id="content" cols="110" rows="10"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="password">分类</label>
+        <br>
+        {% if classify_list %}
+            {% for classify in classify_list %}
+                <input type="radio" name="classify" value="{{ classify.pk }}">{{ classify.name }}
+                <br>
+            {% endfor %}
+        {% else %}
+            <p>请先创建属于你的分类哦~</p>
+        {% endif %}
+
+    </div>
+    <div class="form-group">
+        <label for="password">标签</label>
+        <br>
+        {% for tag in tags_list %}
+            <input type="checkbox" name="tags{{ forloop.counter }}" value="{{ tag.pk }}">{{ tag.name }}
+            <br>
+        {% endfor %}
+    </div>
+        <input class="btn btn-primary pull-right" id="submit_add_art" type="button" value="提交">
+        <span style="color: darkred" id="add_art_error"></span>
+        <br><br><br>
+    </form>
+{% endblock %}
+{#ajax传数据#}
+{% block js_add %}
+    $("#submit_add_art").click(function(){
+        let formDataObj = new FormData();
+        //普通键值[{}{}{}{}]
+        $.each($("#myform").serializeArray(),function (index,obj){
+            formDataObj.append(obj.name,obj.value)
+        })
+        $.ajax({
+            url:'/add_article/',
+            type:'post',
+            data:formDataObj,
+            contentType:false,
+            processData:false,
+            success:function (args){
+                if(args.code==1000){
+                    //弹出模态框
+                    window.location.href = args.url
+                }else{
+                    $("#add_art_error").text(args.msg)
+                }
+            }
+        })
+    })
+{% endblock %}

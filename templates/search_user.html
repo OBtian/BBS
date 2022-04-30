@@ -1,0 +1,65 @@
+{% extends 'search.html' %}
+
+{% block active %}
+    <li role="presentation" id="mul"><a href="#multiple" aria-controls="home" role="tab"
+                                                                       data-toggle="tab">综合</a></li>
+                    <li role="presentation" id="art"><a href="#article" aria-controls="home" role="tab"
+                                                        data-toggle="tab">文章</a></li>
+                    <li role="presentation" id="user" class="active"><a href="#users" aria-controls="home" role="tab"
+                                                         data-toggle="tab">用户</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10 col-md-offset-1" role="navigation">
+        <div class="tab-content" style="padding-left: 15px">
+            <div role="tabpanel" class="tab-pane" id="multiple">
+{% endblock %}
+
+
+{% block user %}
+<div role="tabpanel" class="tab-pane active" id="users">
+                <div class="media">
+                    {% if page_queryset_user %}
+                        {% for user in page_queryset_user %}
+                            <div class="media-left media-middle">
+                                <a href="/{{ user.usersite.site_name }}/">
+                                    <img class="media-object img-circle" src="/media/{{ user.avatar }}" alt="..."
+                                         width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading" style="margin: 30px;"><a
+                                        href="/{{ user.usersite.site_name }}">{{ user.username }}</a></h3>
+                            </div>
+                            <br>
+                            <hr>
+                        {% endfor %}
+                        <div class="col-md-8 col-md-offset-2">
+                            {{ page_obj.page_html|safe }}
+                        </div>
+                    {% else %}
+                        <p>再怎么找也没有啦~先看看下面的吧</p>
+                        <hr>
+                        <br>
+                        {% for user in page_queryset_users %}
+                            <div class="media-left media-middle">
+                                <a href="/{{ user.usersite.site_name }}/">
+                                    <img class="media-object img-circle" src="/media/{{ user.avatar }}" alt="..."
+                                         width="80px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading" style="margin: 30px;"><a
+                                        href="/{{ user.usersite.site_name }}">{{ user.username }}</a></h3>
+                            </div>
+                            <br>
+                            <hr>
+                        {% endfor %}
+                        <div class="col-md-8 col-md-offset-2">
+                            {{ page_obj.page_html|safe }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+{% endblock %}

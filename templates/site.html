@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ usersite.site_name }}</title>
+    <meta name="viewport" content="wdith=device-wdith,initial-scale=1">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css"
+          integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+</head>
+
+<style>
+    .d1 > a {
+        text-decoration: none;
+        color: #0f0f0f;
+    }
+
+    .d1 > a:hover {
+        color: #c0c0c0;
+    }
+
+    {% block css %}
+
+    {% endblock %}
+</style>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div style="margin-bottom: -10px;padding-top: 10px">
+            <div style="font-size: 20px;line-height: 50px;text-align: center" class="text-center center" width="500px">{{ usersite.site_title }}</div>
+            <div class="pull-right d1" style="line-height: 50px;position: absolute;right: 20px;top: 10px">
+                <a href="/{{ usersite.site_name }}/">首页&nbsp;&nbsp;</a>
+                <a href="/backend/">管理&nbsp;&nbsp;</a>
+                <a href="/">博客园&nbsp;&nbsp;</a>
+            </div>
+        </div>
+        <hr>
+        <div class="col-md-3">
+            {% load mytag %}
+            {% left_menu user_obj.username %}
+        </div>
+        <div class="col-md-8 pull-right">
+            {% block content %}
+                {% if page_queryset %}
+                {% for article in page_queryset %}
+                    <div class="media">
+                        <h4 class="media-heading"><a
+                                href="/{{ user_obj.usersite.site_name }}/article/{{ article.pk }}">{{ article.title }}</a></h4>
+                        <div class="media-left">
+                            <a href="/{{ article.usersite }}/">
+                                <img class="media-object" src="/media/{{ article.usersite.userinfo.avatar }}" alt="..."
+                                     width="80px">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            {{ article.desc }}
+                        </div>
+                    </div>
+
+                    <div>
+                    <br>
+                    <span>posted&nbsp;&nbsp;</span><span>@&nbsp;&nbsp;</span>
+                    <span>{{ article.create_time|date:'Y-m-d h:m' }}&nbsp;&nbsp;&nbsp;</span>
+                    <hr>
+                {% endfor %}
+            <div class="col-md-8 col-md-offset-2">
+                {{ page_obj.page_html|safe }}
+            </div>
+                {% else %}
+                    <div style="line-height: 200px;color: rgba(0,0,0,0.4);text-align: center;padding-right: 20vw;font-size: 16px">暂无内容，来添加你的第一篇文章吧~</div>
+                {% endif %}
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+</body>
+{% block js %}
+{% endblock %}
+</html>

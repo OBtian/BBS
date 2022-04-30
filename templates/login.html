@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <meta name="viewport" content="wdith=device-wdith,initial-scale=1">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h1 class="text-center">Login</h1>
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" name="username" id="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" name="password" id="password" class="form-control">
+            </div>
+            <label for="username">验证码</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="code" id="id_code" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    {% load static %}
+                    <img src="/get_code/" alt="" height="30px" width="220px" id="id_confirm">
+                </div>
+
+            </div>
+            <span style="color:darkred" class="pull-left" id="error"></span>
+            <input class="btn btn-success pull-right" value="登录" id="id_commit" type="button" style="margin-top: 20px">
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $("#id_confirm").click(function (){
+        let oldVal = $(this).attr('src');
+        $(this).attr('src',oldVal += '?')
+    })
+    $("#id_commit").click(function (){
+        $.ajax({
+            url:'',
+            type:'post',
+            data:{
+                'username':$('#username').val(),
+                'password':$('#password').val(),
+                'code':$('#id_code').val(),
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function (args){
+                if(args.code == 1000){
+                    //弹出模态框
+                    window.location.href = args.url
+                }else{
+                    $("#error").text(args.msg)
+                }
+            }
+        })
+        let oldVal = $("#id_confirm").attr('src');
+        $("#id_confirm").attr('src',oldVal += '?')
+    })
+</script>
+</html>

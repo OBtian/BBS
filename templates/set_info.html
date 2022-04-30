@@ -1,0 +1,65 @@
+{% extends 'backend.html' %}
+
+{% block active %}
+              <li role="presentation" id="art"><a href="#articles" aria-controls="home" role="tab" data-toggle="tab">文章管理</a></li>
+              <li role="presentation" id="cla"><a href="#classify" aria-controls="home" role="tab" data-toggle="tab">分类管理</a></li>
+              <li role="presentation" id="com"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab">回复管理</a></li>
+              <li role="presentation" id="add_art"><a href="#add_article" aria-controls="home" role="tab" data-toggle="tab">添加文章</a></li>
+              <li role="presentation" id="add_cla"><a href="#add_classify" aria-controls="home" role="tab" data-toggle="tab">添加分类</a></li>
+              <li role="presentation" id="my_com"><a href="#my_comments" aria-controls="home" role="tab" data-toggle="tab">我的评论</a></li>
+              <li role="presentation" id="set" class="active"><a href="#settings" aria-controls="home" role="tab" data-toggle="tab">设置</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9 pull-right" role="navigation">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="articles">
+{% endblock %}
+
+{% block settings %}
+    <div role="tabpanel" class="tab-pane active" id="settings">
+<form id="myform_setting">
+{% csrf_token %}
+    {% for form in form_obj %}
+        <div class="form-group">
+            <label for="{{ form.auto_id }}">{{ form.label }}</label>
+            {{ form }}
+            <span style="color:darkred" class="pull-right">{{ form.errors.0 }}</span>
+        </div>
+    {% endfor %}
+    <input type="button" id="save" value="保存" class="btn btn-primary pull-right">
+</form>
+    </div>
+{% endblock %}
+{% block js_add %}
+    $("#save").click(function (){
+        //ajax发送数据
+        //普通键值对和文件用formdata
+        let formDataObj = new FormData();
+        //普通键值[{}{}{}{}]
+        $.each($("#myform_setting").serializeArray(),function (index,obj){
+            formDataObj.append(obj.name,obj.value)
+        })
+
+        $.ajax({
+            url:'/set_info/',
+            type:'post',
+            data:formDataObj,
+            contentType:false,
+            processData:false,
+            success:function (args){
+                if(args.code==1000){
+                    //弹出模态框
+                    window.location.href = '/backend/'
+                }else{
+                    $.each(args.msg,function (index,obj){
+                        let targetid = '#id_' + index;
+                        $(targetid).next().text(obj[0]).parent().addClass('has-error')
+                    })
+                }
+            }
+        })
+    })
+    $('input').focus(function (){
+        $(this).next().text('').parent().removeClass('has-error')
+    })
+{% endblock %}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <meta name="viewport" content="wdith=device-wdith,initial-scale=1">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+</head>
+<style>
+    .avatar-main{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .avatar-container{
+        height: 60px;
+        width: 60px;
+        margin-left: 20px;
+        border-radius: 30px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h1 class="text-center">Register</h1>
+            <form id="myform">
+                {% csrf_token %}
+                <div class="form-group">
+                    {# 头像裁剪 #}
+                    <label for="myfile">
+                        <div class="avatar-main">
+                            头像
+                            {% load static %}
+                            <div class="avatar-container">
+                               <img src="{% static 'img/default.png' %}" alt="" height="60px" id="myimg" class="avatar" >
+                            </div>
+                        </div>
+                    </label>
+                    <input type="file" id="myfile" name="avatar" style="display: none">
+                </div>
+                {% for form in form_obj %}
+                    <div class="form-group">
+                        <label for="{{ form.auto_id }}">{{ form.label }}</label>
+                        {{ form }}
+                        <span style="color:darkred" class="pull-right">{{ form.errors.0 }}</span>
+                    </div>
+                {% endfor %}
+                <br>
+                <input type="button" id="id_commit" value="注册" class="btn btn-primary pull-right">
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $("#myfile").change(function (){
+        // 生成文件阅读器对象
+        let myFileReaderObj = new FileReader();
+        //获取上传文件
+        let fileobj = $(this)[0].files[0];
+        //将文件交给阅读器阅读
+        myFileReaderObj.readAsDataURL(fileobj) //异步IO操作
+        myFileReaderObj.onload = function (){
+            $("#myimg").attr('src',myFileReaderObj.result);
+        }
+    });
+    $("#id_commit").click(function (){
+        //ajax发送数据
+        //普通键值对和文件用formdata
+        let formDataObj = new FormData();
+        //普通键值[{}{}{}{}]
+        $.each($("#myform").serializeArray(),function (index,obj){
+            formDataObj.append(obj.name,obj.value)
+        })
+        //文件
+        formDataObj.append('avatar',$('#myfile')[0].files[0]);
+
+        $.ajax({
+            url:'',
+            type:'post',
+            data:formDataObj,
+            contentType:false,
+            processData:false,
+            success:function (args){
+                if(args.code==1000){
+                    //弹出模态框
+                    window.location.href = args.url
+                }else{
+                    $.each(args.msg,function (index,obj){
+                        let targetid = '#id_' + index;
+                        $(targetid).next().text(obj[0]).parent().addClass('has-error')
+                    })
+                }
+            }
+        })
+    })
+    $('input').focus(function (){
+        $(this).next().text('').parent().removeClass('has-error')
+    })
+</script>
+</html>
